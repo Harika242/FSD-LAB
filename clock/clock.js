@@ -1,94 +1,56 @@
-import React,{useState,useContext,useEffect,createContext} from "react";
-const ThemeContext=createContext();
-const ThemeProvider=({children})=>{
-  const [theme,setTheme] =useState('light');
-  const toggleTheme=()=>{
-    setTheme((prevTheme)=>(prevTheme ==='light' ? 'dark' : 'light'));
-  };
-  return(
-    <ThemeContext.Provider value={{theme,toggleTheme}}>{children}</ThemeContext.Provider>
-  );
-};
-const ThemedComponent=()=>{
-  const{theme,toggleTheme}=useContext(ThemeContext);
-  const themedComponentStyle={
-    background:theme==='light' ? '#fff' : '#333',
-    color:theme==='light' ? '#333':'#fff',
-    padding:'20px',
-    margin:'20px 0',
-  };
-  return(
-    <div style={themedComponentStyle}>
-      <h3>Themed component</h3>
-      <p>Current Theme:{theme}</p>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </div>
-  );
-};
-const CounterComponent=()=>{
-  const [count,setCount]=useState(0);
-  useEffect(()=>{
-    document.title=`count:${count}`;
-  },[count]);
-  const counterStyle={
-    margin:'20px 0',
-    padding:'20px',
-    border:'1px solid #ccc',
-    borderRadius:'8px',
-  };
-  return(
-    <div style={counterStyle}>
-      <h2>Counter Component</h2>
-      <p>count:{count}</p>
-      <button onClick={()=>setCount(count+1)}>Increment</button>
-      <button onClick={()=>setCount(count-1)}disabled={count===0}>decrement</button>
-      {/themedComponent using context/}
-      <ThemedComponent/>
-    </div>
-  );
-};
-const UserInfoComponent=()=>{
-  const [userInfo,setUserInfo]=useState({name:'',age:0});
-  useEffect(()=>{
-    const fetchUserInfo=async() =>{
-        setTimeout(()=>{
-          setUserInfo({name: 'urdhvasri',age:100000});
-        },1000);
-    };
-    fetchUserInfo();
-  },[]);
-  const userInfoStyle={
-    margin:'20px 0',
-    padding:'20px',
-    border:'1px solid #ccc',
-    borderRadius:'8px',
-  };
-  return(
-    <div style={userInfoStyle}>
-      <h2>User Info Component</h2>
-      <p>Name:{userInfo.name}</p>
-      <p>Age:{userInfo.age}</p>
-    </div>
-  );
-};
-const App=() =>{
-  const appStyle={
-    fontFamily:'Arial,sans-serif',
-    maxWidth:'600px',
-    margin:'auto',
-    padding:'20px',
-  };
-  return(
-    <ThemeProvider>
-      <div style={{textAlign:'center',marginTop:'10px'}}>
-        <h1 style={{borderBottom:'2px solid orange',color:'blue'}}>All hooks @ once</h1>
-      </div>
-      <div style={appStyle}>
-        <CounterComponent/>
-        <UserInfoComponent/>
-      </div>
-  
-    </ThemeProvider>
-  );
-};
-export default App;
+import React, { Component } from "react";
+export default class Clock extends Component {
+ constructor(props) {
+ super(props);
+ this.state = {
+ time: new Date()
+ };
+ }
+ componentDidMount() {
+ this.timerId = setInterval(() => {
+ this.setState({
+ time: new Date()
+ });
+ }, 1000);
+ }
+ componentWillUnmount() {
+ clearInterval(this.timerId);
+ }
+ render() { 
+ return (
+ <div className="clock">
+ <div className="analog-clock">
+ <div
+ className="hour_hand"
+ style={{
+ transform: `rotateZ(${this.state.time.getHours() * 30}deg)`
+ }}
+ />
+ <div
+ className="min_hand"
+ style={{
+ transform: `rotateZ(${this.state.time.getMinutes() * 6}deg)`
+ }}
+ />
+ <div
+ className="sec_hand"
+ style={{
+ transform: `rotateZ(${this.state.time.getSeconds() * 6}deg)`
+ }}
+ />
+ <span className="twelve">12</span>
+ <span className="one">1</span>
+ <span className="two">2</span>
+ <span className="three">3</span> <span className="four">4</span>
+ <span className="five">5</span>
+ <span className="six">6</span>
+ <span className="seven">7</span>
+ <span className="eight">8</span>
+ <span className="nine">9</span>
+ <span className="ten">10</span>
+ <span className="eleven">11</span>
+ </div> 
+ </div> 
+ );
+ }
+}
